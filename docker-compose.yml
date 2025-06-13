@@ -1,0 +1,17 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongo-container
+    restart: always
+    ports:
+      - "27017:27017"
+
+  app:
+    image: 186091750343.dkr.ecr.us-west-2.amazonaws.com/backend-app:latest
+    container_name: express-app
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
