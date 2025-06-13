@@ -1,17 +1,24 @@
+version: "3.8"
 services:
   mongo:
     image: mongo
     container_name: mongo-container
-    restart: always
     ports:
       - "27017:27017"
+    networks:
+      - mynetwork
 
-  app:
-    image: 186091750343.dkr.ecr.us-west-2.amazonaws.com/backend-app:latest
+  backend:
+    image: backend-app
     container_name: express-app
+    environment:
+      - MongoURI=mongodb://mongo:27017/mydb # ✅ Usa el nombre del servicio en lugar de la IP
+    ports:
+      - "8085:8085"
     depends_on:
       - mongo
-    env_file:
-      - .env
-    ports:
-      - "8080:8080"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
